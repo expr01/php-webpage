@@ -35,18 +35,18 @@ if ($userData) {
         // 패스워드가 일치하면 로그인 성공
         echo "<script>alert('로그인 성공!');
         window.location.href = '../views/post_list.php';</script>";
-        exit();
 
-        // 여기에 세션 설정 등 로그인 후 처리하는 로직 추가
+        // 세션 변수 추가
+        session_start();
+        $_SESSION['user_id'] = $userData['user_id'];
+
     } else {
         echo "<script>alert('비밀번호가 일치하지 않습니다.');
         window.location.href = '../login.php';</script>";
-        exit();
     }
 } else {
     echo "<script>alert('해당 이메일의 사용자가 없습니다.');
     window.location.href = '../login.php';</script>";
-    exit();
 }
 
 // 데이터베이스 연결 닫기

@@ -8,13 +8,12 @@ class PostModel
     $this->conn = $conn;
   }
 
-  public function createPost($user_id, $title, $content, $is_attached)
+  public function insertPostWithUserID($user_id, $title, $content, $is_attached)
   {
     $query = "INSERT INTO posts (user_id, post_title, post_content, is_attached) VALUES (?, ?, ?, ?)";
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param("isss", $user_id, $title, $content, $is_attached);
 
-    // 데이터 삽입 실행
     if ($stmt->execute()) {
       return true; // 글이 성공적으로 작성됨
     } else {
@@ -22,19 +21,48 @@ class PostModel
     }
   }
 
-  public function getPostList()
+  // posts 테이블에서 모든 글을 가져오는 메서드
+  public function getAllPosts()
   {
-    $query = "SELECT user_id, post_title, post_content, posted_at FROM posts";
+    $query = "SELECT * FROM posts";
     $result = $this->conn->query($query);
 
+    $posts = array();
     if ($result->num_rows > 0) {
-      $posts = array();
       while ($row = $result->fetch_assoc()) {
         $posts[] = $row;
       }
-      return $posts;
+    }
+    return $posts;
+  }
+
+  public function getPostById($postId)
+  {
+    $query = "SELECT * FROM posts WHERE id = ?";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("i", $postId);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+      $post = $result->fetch_assoc();
+      return $post;
     } else {
-      return array();
+      return null; // 해당 ID의 게시글을 찾을 수 없을 때
+    }
+  }
+
+  public function updatePost($postId, $title, $content)
+  {
+    $query = "UPDATE posts SET post_title = ?, post_content = ? WHERE id = ?";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("ssi", $title, $content, $postId);
+
+    if ($stmt->execute()) {
+      return true; // 게시글이 성공적으로 업데이트됨
+    } else {
+      return false; // 게시글 업데이트 실패
     }
   }
 }

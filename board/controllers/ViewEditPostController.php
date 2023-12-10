@@ -18,14 +18,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// PostModel 인스턴스 생성
-$postModel = new PostModel($conn);
-
-// 모든 글 가져오기
-$posts = $postModel->getAllPosts();
-
-
-// 데이터베이스 연결 종료
-$conn->close();
-
+// 만약 GET 요청으로 전달된 ID가 있다면
+if (isset($_GET['id'])) {
+  // 해당 ID를 사용하여 게시글 정보를 가져옴.
+  $postId = $_GET['id'];
+  $post = $postModel->getPostById($postId); // 예시에서는 getPostById 메소드를 사용한다고 가정합니다.
+}
 ?>

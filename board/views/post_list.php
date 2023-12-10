@@ -1,3 +1,18 @@
+<?php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/controllers/ViewPostController.php');
+
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+  $currentUserId = $_SESSION['user_id'];
+} else {
+  // 로그인 되어 있지 않은 경우 처리
+  echo "<script>alert('로그인이 필요합니다.');
+  window.location.href = '../login.php';</script>";
+  exit; // 작업 중지
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -124,24 +139,63 @@
     .logout-button:hover {
       background-color: #bd2130;
     }
+
+    /* 수정, 삭제 버튼 스타일 */
+    .edit-link {
+      padding: 5px 10px;
+      text-decoration: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 3px;
+      margin-right: 5px;
+    }
+
+    /* 삭제 버튼 스타일 */
+    .delete-button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background-color: #dc3545;
+      color: white;
+    }
   </style>
 </head>
 
 <body>
   <div class="postlist-container">
     <h2>게시글 목록</h2>
-    <?php
-    // ViewPostController.php 에서 데이터를 받아서 사용
-    ?>
 
-    <!-- 글쓰기 버튼 추가 -->
-    <div class="post-item">
-      <!-- create_post.php로 수정 -->
-      <a href="./create_post.php" class="create-post-button">글쓰기</a>
-      <!-- 로그아웃 버튼 추가 -->
-      <button onclick="openModal()" class="logout-button">로그아웃</button>
+    <?php foreach ($posts as $post) { ?>
+      <div class="post-item">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3><?php echo $post['post_title']; ?></h3>
+          <div>
+            <button onclick="editPost(<?php echo $post['user_id']; ?>)" class="edit-link">수정</button>
+            <button onclick="openDeleteModal(<?php echo $post['user_id'] ?>)" class="delete-button">삭제</button>
+          </div>
+        </div>
+        <p>User ID: <?php echo $post['user_id']; ?></p>
+        <p>Post Content: <?php echo $post['post_content']; ?></p>
+        <p>Posted At: <?php echo $post['posted_at']; ?></p>
+        <p>Modified At: <?php echo $post['modified_at']; ?></p>
+      </div>
+    <?php } ?>
+
+    <!-- 삭제 모달 -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
+        <p>게시물을 삭제하시겠습니까?</p>
+        <button onclick="deletePost()">삭제</button>
+        <button onclick="closeDeleteModal()">취소</button>
+      </div>
     </div>
 
+    <!-- 글쓰기 버튼과 로그아웃 버튼 -->
+    <div class="post-item">
+      <a href="./create_post.php" class="create-post-button">글쓰기</a>
+      <button onclick="openModal()" class="logout-button">로그아웃</button>
+    </div>
   </div>
 
   <!-- 로그아웃 모달 -->
@@ -166,8 +220,44 @@
 
     // 로그아웃 함수
     function logout() {
-      window.location.href = "../controllers/LogoutContoller.php";
+      window.location.href = "../controllers/LogoutController.php";
     }
+
+    // 삭제 버튼 누를 시 모달 열기 함수
+    function openDeleteModal(postUserId) {
+      var currentUserId = <?php echo $currentUserId; ?>;
+      if (currentUserId === postUserId) {
+        document.getElementById('deleteModal').style.display = 'block';
+      } else {
+        alert("본인의 게시글만 삭제할 수 있습니다.");
+      }
+    }
+
+    // 모달 닫기 함수
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // 삭제 함수
+    function deletePost() {
+      window.location.href = "../controllers/DeletePostController.php";
+    }
+
+    //수정 함수
+    function editPost(postUserId) {
+    var currentUserId = <?php echo $currentUserId; ?>;
+    if (currentUserId === postUserId) {
+      window.location.href = "./edit_post.php?id=<?php echo $post['user_id']; ?>";
+    } else {
+      showAlert();
+    }
+  }
+
+    // 수정 버튼 클릭 시 경고 메시지 표시하는 함수
+    function showAlert() {
+    alert("본인의 게시글만 수정할 수 있습니다.");
+  }
+
   </script>
 </body>
 
