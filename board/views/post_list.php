@@ -52,6 +52,16 @@ if (isset($_SESSION["user_id"])) {
       margin-bottom: 10px;
     }
 
+    .post-title {
+      text-decoration: none;
+      color: black;
+    }
+
+    .post-title:hover {
+      text-decoration: none;
+      color: blue;
+    }
+
     .post-item:last-child {
       border-bottom: none;
       margin-bottom: 0;
@@ -169,16 +179,19 @@ if (isset($_SESSION["user_id"])) {
     <?php foreach ($posts as $post) { ?>
       <div class="post-item">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3><?php echo $post['post_title']; ?></h3>
+        <h3><a class="post-title" href="view_post_detail.php?post_id=<?php echo $post['post_id']; ?>&user_id=<?php echo $post['user_id']; ?>">
+        <?php echo $post['post_title']; ?></a></h3>
           <div>
-            <button onclick="editPost(<?php echo $post['user_id']; ?>)" class="edit-link">수정</button>
-            <button onclick="openDeleteModal(<?php echo $post['user_id'] ?>)" class="delete-button">삭제</button>
+            <button onclick="editPost(<?php echo $post['user_id']; ?>, <?php echo $post['post_id']; ?>)" class="edit-link">수정</button>
+            <button onclick="openDeleteModal(<?php echo $post['user_id'] ?>, <?php echo $post['post_id'] ?>)" class="delete-button">삭제</button>
           </div>
         </div>
+        <p>Post ID: <?php echo $post['post_id']; ?></p>
         <p>User ID: <?php echo $post['user_id']; ?></p>
         <p>Post Content: <?php echo $post['post_content']; ?></p>
         <p>Posted At: <?php echo $post['posted_at']; ?></p>
         <p>Modified At: <?php echo $post['modified_at']; ?></p>
+        <p>is_attached: <?php echo $post['is_attached']; ?></p>
       </div>
     <?php } ?>
 
@@ -220,13 +233,16 @@ if (isset($_SESSION["user_id"])) {
 
     // 로그아웃 함수
     function logout() {
-      window.location.href = "../controllers/LogoutController.php";
+      window.location.href = "../controllers/LogoutContoller.php";
     }
 
+    let postIdToDelete;
+
     // 삭제 버튼 누를 시 모달 열기 함수
-    function openDeleteModal(postUserId) {
+    function openDeleteModal(postUserId, postId) {
       var currentUserId = <?php echo $currentUserId; ?>;
       if (currentUserId === postUserId) {
+        postIdToDelete = postId;
         document.getElementById('deleteModal').style.display = 'block';
       } else {
         alert("본인의 게시글만 삭제할 수 있습니다.");
@@ -239,25 +255,24 @@ if (isset($_SESSION["user_id"])) {
     }
 
     // 삭제 함수
-    function deletePost() {
-      window.location.href = "../controllers/DeletePostController.php";
+    function deletePost(postId) {
+      window.location.href = "../controllers/DeletePostController.php?id=" + postIdToDelete;
     }
 
     //수정 함수
-    function editPost(postUserId) {
-    var currentUserId = <?php echo $currentUserId; ?>;
-    if (currentUserId === postUserId) {
-      window.location.href = "./edit_post.php?id=<?php echo $post['user_id']; ?>";
-    } else {
-      showAlert();
+    function editPost(postUserId, postId) {
+      var currentUserId = <?php echo $currentUserId; ?>;
+      if (currentUserId === postUserId) {
+        window.location.href = "./edit_post.php?id=" + postId;
+      } else {
+        showAlert();
+      }
     }
-  }
 
     // 수정 버튼 클릭 시 경고 메시지 표시하는 함수
     function showAlert() {
-    alert("본인의 게시글만 수정할 수 있습니다.");
-  }
-
+      alert("본인의 게시글만 수정할 수 있습니다.");
+    }
   </script>
 </body>
 

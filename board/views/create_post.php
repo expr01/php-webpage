@@ -66,7 +66,7 @@
 </head>
 <body>
   <div class="writepost-container">
-    <h2>Write Post</h2>
+    <h2>게시글 작성</h2>
     <!-- 글 작성 폼 -->
     <form action="../controllers/CreatePostController.php" method="POST" enctype="multipart/form-data">
       <label for="post_title">Title:</label>

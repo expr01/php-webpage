@@ -24,7 +24,6 @@ $postModel = new PostModel($conn);
 // 모든 글 가져오기
 $posts = $postModel->getAllPosts();
 
-
 // 데이터베이스 연결 종료
 $conn->close();
 

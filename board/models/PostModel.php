@@ -38,7 +38,7 @@ class PostModel
 
   public function getPostById($postId)
   {
-    $query = "SELECT * FROM posts WHERE id = ?";
+    $query = "SELECT * FROM posts WHERE post_id = ?";
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param("i", $postId);
     $stmt->execute();
@@ -53,16 +53,29 @@ class PostModel
     }
   }
 
-  public function updatePost($postId, $title, $content)
+  public function updatePost($postId, $title, $content, $isAttached)
   {
-    $query = "UPDATE posts SET post_title = ?, post_content = ? WHERE id = ?";
+    $query = "UPDATE posts SET post_title = ?, post_content = ?, modified_at = current_timestamp(), is_attached = ? WHERE post_id = ?";
     $stmt = $this->conn->prepare($query);
-    $stmt->bind_param("ssi", $title, $content, $postId);
+    $stmt->bind_param("ssii", $title, $content, $isAttached, $postId);
 
     if ($stmt->execute()) {
       return true; // 게시글이 성공적으로 업데이트됨
     } else {
       return false; // 게시글 업데이트 실패
+    }
+  }
+
+  public function deletePost($postId)
+  {
+    $query = "DELETE FROM posts WHERE post_id = ?";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("i", $postId);
+
+    if ($stmt->execute()) {
+      return true; // 게시글이 성공적으로 삭제됨
+    } else {
+      return false; // 게시글 삭제 실패
     }
   }
 }

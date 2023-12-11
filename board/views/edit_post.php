@@ -2,6 +2,10 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/controllers/EditPostController.php');
 
 $postId = $_GET['id'];
+$post = $postModel->getPostById($postId);
+
+$title = $post['post_title'];
+$content = $post['post_content'];
 ?>
 
 <!DOCTYPE html>
@@ -78,14 +82,16 @@ $postId = $_GET['id'];
 
 <body>
   <div class="editpost-container">
-    <h2>Edit Post</h2>
+    <h2>게시글 수정</h2>
     <!-- 수정할 수 있는 입력 필드를 포함한 폼 -->
-    <form action="../controllers/EditPostController.php" method="POST">
+    <form action="../controllers/EditPostController.php" method="POST" enctype="multipart/form-data">
       <label for="post_title">Title:</label>
-      <input type="text" id="post_title" name="post_title" value="<?php echo $post['post_title']; ?>" required>
+      <input type="text" id="post_title" name="post_title" value="<?php echo $title; ?>" required>
       <label for="post_content">Content:</label>
-      <textarea id="post_content" name="post_content" required><?php echo $post['post_content']; ?></textarea>
+      <textarea id="post_content" name="post_content" required><?php echo $content; ?></textarea>
       <input type="hidden" name="post_id" value="<?php echo $postId; ?>">
+      <label for="file">Attachment:</label>
+      <input type="file" id="file" name="file">
       <input type="submit" value="Update">
     </form>
   </div>

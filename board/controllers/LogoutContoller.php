@@ -10,4 +10,3 @@ session_destroy();
 echo "<script>alert('로그아웃 하셨습니다.');
       window.location.href = '../login.php';</script>";
 exit();
-?>
