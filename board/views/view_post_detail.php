@@ -3,7 +3,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/controllers/ViewPostDetailController.
 session_start();
 
 $_SESSION["post_id"] = $post['post_id'];
-$_SESSION["user_id"] = $post['user_id'];
 
 if (isset($_SESSION["user_id"])) {
   $currentUserId = $_SESSION['user_id'];
@@ -188,8 +187,8 @@ if (isset($_SESSION["user_id"])) {
     <form action="../controllers/AddCommentController.php" method="POST">
       <label for="comment_content">댓글 작성:</label>
       <textarea id="comment_content" name="comment_content" required></textarea>
-      <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
-      <input type="hidden" name="user_id" value="<?php echo $post['user_id']; ?>">
+      <input type="hidden" name="post_id" value="<?php echo $_SESSION['post_id']; ?>">
+      <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
       <input type="submit" value="댓글 작성" class="create-comment-button">
     </form>
   </div>
