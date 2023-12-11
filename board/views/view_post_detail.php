@@ -146,9 +146,6 @@ if (isset($_SESSION["user_id"])) {
       background-color: #ddd;
     }
   </style>
-
-  <!-- jQuery 추가 -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -172,11 +169,8 @@ if (isset($_SESSION["user_id"])) {
             <p>Comment Content : <?php echo $comment['comment_content']; ?></p>
             <p>Commented At : <?php echo $comment['commented_at']; ?></p>
             <!-- 여기에 댓글의 작성자, 작성 시간 등 추가 가능 -->
-            <form action="../controllers/DeleteCommentController.php" method="POST" onsubmit="return false">
-              <input type="hidden" name="post_id" value="<?php echo $_SESSION["post_id"]; ?>">
-              <input type="hidden" name="user_id" value="<?php echo $_SESSION["user_id"]; ?>">
-              <button type="submit" onclick="openDeleteCommentModal('<?php echo $comment['comment_id']; ?>', '<?php echo $comment['user_id']; ?>')" class="delete-comment-button">댓글 삭제</button>
-            </form>
+            <button type="submit" onclick="openDeleteCommentModal('<?php echo $comment['comment_id']; ?>', '<?php echo $comment['user_id']; ?>')"
+            class="delete-comment-button">댓글 삭제</button>
           </div>
         <?php } ?>
       <?php } ?>

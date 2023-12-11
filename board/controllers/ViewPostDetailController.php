@@ -25,8 +25,6 @@ $CommentModel = new CommentModel($conn);
 $postId = $_GET['post_id'];
 $userId = $_GET['user_id'];
 
-echo $postId, $userId;
-
 $post = $postModel->getPostById($postId);
 $comments = $CommentModel->getAllComments();
 
