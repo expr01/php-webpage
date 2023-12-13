@@ -10,10 +10,10 @@ $username = "jh";
 $password = "1234";
 $dbname = "forum";
 
-// Create connection
+// DB 연결부
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+// DB 연결부
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
